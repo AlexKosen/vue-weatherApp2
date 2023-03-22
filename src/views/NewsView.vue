@@ -21,7 +21,7 @@
             <li class="menu-item">
               <RouterLink v-bind:to="{ name: 'home' }">Home</RouterLink>
             </li>
-            <li class="menu-item current-menu-item">
+            <li :class="[$route.path === '/news'? 'menu-item current-menu-item': 'menu-item']">
               <RouterLink v-bind:to="{ name: 'news' }">News</RouterLink>
             </li>
             <li class="menu-item">

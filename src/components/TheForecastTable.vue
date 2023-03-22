@@ -42,7 +42,11 @@ export default {
 
       currentWeather: [],
 
-      date: "",
+      date: new Date(),
+
+      getCurrentGeolocation: " ",
+
+      currentLocationCity: " ",
 
       iconsWeather: {
         0: "/images/icon-2.svg", //ясно
@@ -210,10 +214,40 @@ export default {
   },
 
   created() {
-    this.date = new Date();
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        this.getCurrentGeolocation = `latitude=${pos.coords.latitude}&longitude=${pos.coords.longitude}`;
+        console.log("Longitude: " + pos.coords.longitude); // Выведем долготу
+        console.log("Latitude: " + pos.coords.latitude); // Выведем широту
+        console.log(this.getCurrentGeolocation);
 
-    this.getRespons(this.cities[0].adress, this.cities[0].city);
+        const query = new URLSearchParams({
+          q: "",
+          locale: "en",
+          limit: "5",
+          reverse: "true",
+          debug: "false",
+          point: `${pos.coords.latitude},${pos.coords.longitude}`,
+          provider: "default",
+          key: "6b3f94b0-c415-4e7d-9aa9-686125745976",
+        }).toString();
+
+        const resp = fetch(`https://graphhopper.com/api/1/geocode?${query}`, {
+          method: "GET",
+        })
+          .then((resp) => resp.json())
+          .then((obj) =>
+            this.getRespons(this.getCurrentGeolocation, obj.hits[0].city)
+          );
+      },
+
+      (error) => this.getRespons(this.cities[0].adress, this.cities[0].city),
+      console.log(
+        "Пожалуйста, разрешите доступ к использованию Вашей геолокации!"
+      )
+    );
   },
+
   computed: {
     currentTemp() {
       let temperature = this.currentWeather[0]?.current_weather.temperature;
@@ -224,7 +258,7 @@ export default {
 </script>
 
 <template>
-  <div class="hero" data-bg-image="@/assets/images/banner.png">
+  <div class="hero">
     <div class="container">
       <form action="#" class="find-location">
         <select v-model.lazy="selectCity">
@@ -396,7 +430,7 @@ export default {
   </div>
 </template>
 
-<style >
+<style>
 .hero {
   background-image: url("@/assets/images/banner.png");
 }
@@ -404,4 +438,9 @@ export default {
   display: none;
 }
 
+@media screen and (max-width: 480px) {
+  .forecast-container .forecast.today .degree .num {
+    font-size: 5rem;
+  }
+}
 </style>
