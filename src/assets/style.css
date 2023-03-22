@@ -1280,6 +1280,11 @@ form textarea {
         font-size: 90px;
         font-size: 6.4285714286rem;
         margin-right: 30px; }
+        @media screen and (max-width: 480px) {
+          .forecast-container .forecast.today .degree .num {
+            font-size: 5rem;
+          }
+        }
       .forecast-container .forecast.today span {
         margin-right: 20px; }
         .forecast-container .forecast.today span img {

@@ -438,9 +438,5 @@ export default {
   display: none;
 }
 
-@media screen and (max-width: 480px) {
-  .forecast-container .forecast.today .degree .num {
-    font-size: 5rem;
-  }
-}
+/*  */
 </style>
